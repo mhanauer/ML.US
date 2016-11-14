@@ -1,6 +1,8 @@
 # ML.US
 # Machine learning for universal screening
 # Build an algorithm that predicts mpg from the variables in the data set
+# This version can take a new data set pre processes it including missing data scale and center
+# and run the data set through the caret package without any problems
 #install.packages("caret")
 library(caret)
 #install.packages("mlbench")
@@ -15,12 +17,14 @@ library(RANN)
 mtcars.knn.pred =  predict(mtcars_knn, mtcars)
 # Changed the name to mpg1 so it is different from the mtcars pacakge
 fix(mtcars.knn.pred)
-head(mtcars.knn.pred)
-
+mtcars.knn.pred.df = as.data.frame(mtcars.knn.pred)
+# Need to create x and y.  X needs to be a matrix or double and y needs to be vector or double to work
+x = as.matrix(mtcars.knn.pred.df[,2:length(mtcars.knn.pred.df)])
+y = as.vector(mtcars.knn.pred.df[, 1]); y
 model <- train(
-  mpg1 ~ ., 
+  x = x, y =y, 
   tuneLength = 1,
-  data = mtcars, method = "ranger",
+  method = "ranger",
   trControl = trainControl(method = "cv", number = 5, verboseIter = TRUE)
 )
 model
