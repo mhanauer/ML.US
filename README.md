@@ -10,7 +10,9 @@ model <- train(
   mpg ~.,
   tuneLength = 1,
   data = mtcars, method = "ranger",
-  trControl = trainControl(method = "cv", number = 5, verboseIter = TRUE)
+  trControl = trainControl(method = "cv", number = 5, verboseIter = TRUE),
+  # This works with ranger when you use just the regular y ~ . formula
+  preProcess = c("knnImpute", "centered", "scaled")
 )
 model
 summary(model)
